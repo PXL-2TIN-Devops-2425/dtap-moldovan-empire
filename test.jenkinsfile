@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('f444f5e6-81f9-46f8-84b8-7ee210c6dba5') 
-        DOCKER_REPOSITORY = 'robintrimpeneerspxl/calculatorapp' 
     }
     options {
         timeout(time: 5, unit: 'MINUTES') // Stops the build after 5 minutes
@@ -29,9 +28,8 @@ pipeline {
         }
         stage('Push Artifact') {
             steps {
-                sh '''echo $DOCKER_HUB_CREDENTIALS_PSW | 
-                       docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin && 
-                       docker push $DOCKER_REPOSITORY:latest'''
+                sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
+                sh 'docker push robintrimpeneerspxl/calculatorapp'
             }
         }
         stage('Deployment') {
