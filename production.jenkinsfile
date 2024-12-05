@@ -1,11 +1,17 @@
 pipeline {
     agent any
     stages {
-        stage('dtap production') {
+        stage('deploy prod') {
             steps{
                 sshagent(['prodserver']){
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 docker pull robintrimpeneerspxl/calculatorapp" 
                 }
+            }
+        }
+        stage('start prod'){
+            steps{
+                sshagent(['prodserver']){
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 docker run -p 3000:80 -d calculatorapp
             }
         }
     }
