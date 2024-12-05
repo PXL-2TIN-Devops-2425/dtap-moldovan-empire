@@ -4,7 +4,7 @@ pipeline {
         stage('dtap production') {
             steps{
                 sshagent(['prodserver']){
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 ls -alh" 
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 docker pull robintrimpeneerspxl/calculatorapp" 
                 }
             }
         }
