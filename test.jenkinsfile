@@ -1,17 +1,47 @@
 pipeline {
     agent any
-  
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('f444f5e6-81f9-46f8-84b8-7ee210c6dba5') 
+    }
+    options {
+        timeout(time: 5, unit: 'MINUTES') // Stops the build after 5 minutes
+    }
+    tools {
+        nodejs 'testenvnode' 
+    }
     stages {
-        stage ('cleanup'){
-            steps{
-                // TODO
+        stage('Cleanup') {
+            steps {
+                cleanWs()
             }
         }
-        stage('fetch app code') {
+        stage('Install dependencies') {
             steps {
-                // Get some code from a GitHub repository
                 git branch: 'main', url: 'https://github.com/PXL-2TIN-DevOps-Resources/calculator-app-finished.git'
+                sh 'npm install'
             }
+        }
+        stage('Build Artifact') {
+            steps {
+                sh 'docker build -t robintrimpeneerspxl/calculatorapp:latest .' 
+            }
+        }
+        stage('Push Artifact') {
+            steps {
+                sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
+                sh 'docker push robintrimpeneerspxl/calculatorapp'
+            }
+        }
+        stage('Deployment') {
+            steps {
+                sh 'docker rm -f $(docker ps -aq --filter "name=calcapp") || true'
+                sh 'docker run -p 3000:3000 --name calcapp robintrimpeneerspxl/calculatorapp'
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
         }
     }
 }
