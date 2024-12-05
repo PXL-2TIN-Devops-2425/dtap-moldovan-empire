@@ -4,8 +4,7 @@ pipeline {
         stage('deploy prod') {
             steps{
                 sshagent(['prodserver']){
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 docker container stop calculatorapp" 
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 docker container rm calculatorapp" 
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 docker container rm -f calculatorapp" 
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 docker pull robintrimpeneerspxl/calculatorapp" 
                 }
             }
