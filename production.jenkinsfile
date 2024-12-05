@@ -2,8 +2,10 @@ pipeline {
     agent any
     stages {
         stage('dtap production') {
-            sshagent(['prodserver']){
-                sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 ls -alh" 
+            steps{
+                sshagent(['prodserver']){
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 ls -alh" 
+                }
             }
         }
     }
