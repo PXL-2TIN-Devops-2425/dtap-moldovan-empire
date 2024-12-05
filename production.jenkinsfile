@@ -11,15 +11,17 @@ pipeline {
         stage('start prod'){
             steps{
                 sshagent(['prodserver']){
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 docker run -p 80:3000 -d robintrimpeneerspxl/calculatorapp"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 docker run --name calculatorapp -p 80:3000 -d robintrimpeneerspxl/calculatorapp"
                 }
             }
         }
         stage('test prod'){
             steps{
                 sshagent(['prodserver']){
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 curl 98.84.237.161:80"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 curl -I 98.84.237.161:80"
                 }
+                sh "docker container stop calculatorapp"
+                sh "docker container rm calculatorapp"
             }
         }
     }
