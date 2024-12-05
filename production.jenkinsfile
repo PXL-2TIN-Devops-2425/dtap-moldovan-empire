@@ -19,9 +19,9 @@ pipeline {
             steps{
                 sshagent(['prodserver']){
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 curl -I 98.84.237.161:80"
+                    sh "docker container stop calculatorapp"
+                    sh "docker container rm calculatorapp"
                 }
-                sh "docker container stop calculatorapp"
-                sh "docker container rm calculatorapp"
             }
         }
     }
