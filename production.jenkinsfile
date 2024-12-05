@@ -15,5 +15,12 @@ pipeline {
                 }
             }
         }
+        stage('test prod'){
+            steps{
+                sshagent(['prodserver']){
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@98.84.237.161 curl 98.84.237.161:80"
+                }
+            }
+        }
     }
 }
